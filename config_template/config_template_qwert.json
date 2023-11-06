@@ -334,6 +334,10 @@
         "outbound": "🎯 全球直连"
       },
       {
+        "type": "logical",
+        "mode": "and",
+        "rules": [],
+        "invert": false,
         "outbound": "🐟 漏网之鱼"
       }
     ]
