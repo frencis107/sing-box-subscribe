@@ -334,10 +334,9 @@
         "outbound": "🎯 全球直连"
       },
       {
-        "type": "logical",
-        "mode": "and",
-        "rules": [],
-        "invert": false,
+        "ip_cidr": [
+          "0.0.0.0/0"
+        ],
         "outbound": "🐟 漏网之鱼"
       }
     ]
