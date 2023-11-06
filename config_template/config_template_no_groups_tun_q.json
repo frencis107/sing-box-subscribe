@@ -1,0 +1,212 @@
+{
+  "log": {
+    "level": "debug",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "proxyDns",
+        "address": "8.8.8.8",
+        "detour": "🚀 节点选择"
+      },
+      {
+        "tag": "localDns",
+        "address": "https://223.5.5.5/dns-query",
+        "detour": "🎯 全球直连"
+      },
+      {
+        "tag": "block",
+        "address": "rcode://success"
+      },
+      {
+        "tag": "remote",
+        "address": "fakeip"
+      }
+    ],
+    "rules": [
+      {
+        "domain": [
+          "ghproxy.com",
+          "cdn.jsdelivr.net"
+        ],
+        "server": "localDns"
+      },
+      {
+        "geosite": "category-ads-all",
+        "server": "block"
+      },
+      {
+        "outbound": "any",
+        "server": "localDns",
+        "disable_cache": true
+      },
+      {
+        "geosite": "cn",
+        "server": "localDns"
+      },   
+      {
+        "clash_mode": "direct",
+        "server": "localDns"
+      },
+      {
+        "clash_mode": "global",
+        "server": "proxyDns"
+      },
+      {
+        "geosite": "geolocation-!cn",
+        "server": "proxyDns"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "server": "remote"
+      }
+    ],
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    },
+    "independent_cache": true,
+    "strategy": "ipv4_only"
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "inet4_address": "172.19.0.1/30",
+      "mtu": 9000,
+      "auto_route": true,
+      "strict_route": true,
+      "sniff": true,
+      "endpoint_independent_nat": false,
+      "stack": "system",
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 2080
+        }
+      }
+    },
+    {
+      "type": "mixed",
+      "listen": "127.0.0.1",
+      "listen_port": 2080,
+      "sniff": true,
+      "users": []
+    }
+  ],
+  "outbounds": [
+    {
+      "tag":"🚀 节点选择",
+      "type":"selector",
+      "outbounds":[
+        "♻️ 自动选择",
+        "🎯 全球直连",
+        "{all}"
+      ]
+    },
+    {
+      "tag":"🌏 国外服务",
+      "type":"selector",
+      "outbounds":[
+        "🎯 全球直连",
+        "{all}"
+      ]
+    },
+    {
+      "tag":"♻️ 自动选择",
+      "type":"urltest",
+      "outbounds":[
+        "{all}"
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "1m",
+      "tolerance": 50
+    },
+    {
+      "type": "direct",
+      "tag": "🎯 全球直连"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "type": "block",
+      "tag": "🛑 全球拦截"
+    }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "final": "🚀 节点选择",
+    "geoip": {
+      "download_url": "https://ghproxy.com/github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
+      "download_detour": "🎯 全球直连"
+    },
+    "geosite": {
+      "download_url": "https://ghproxy.com/github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
+      "download_detour": "🎯 全球直连"
+    },
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "dns-out"
+      },
+      {
+        "network": "udp",
+        "port": 443,
+        "outbound": "🛑 全球拦截"
+      },
+      {
+        "geosite": "category-ads-all",
+        "outbound": "🛑 全球拦截"
+      },
+      {
+        "clash_mode": "direct",
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "clash_mode": "global",
+        "outbound": "🚀 节点选择"
+      },
+      {
+        "domain": [
+          "clash.razord.top",
+          "yacd.metacubex.one",
+          "yacd.haishan.me",
+          "d.metacubex.one"
+        ],
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "geosite":"geolocation-!cn",
+        "outbound":"🌏 国外服务"
+      },
+      {
+        "geoip": ["private","cn"],
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "geosite": "cn",
+        "outbound": "🎯 全球直连"
+      }
+    ]
+  },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui_download_url": "",
+      "external_ui_download_detour": "",
+      "external_ui": "ui",
+      "secret": "qwert!233",
+      "default_mode": "rule",
+      "store_selected": true,
+      "cache_file": "",
+      "cache_id": ""
+    }
+  }
+}
