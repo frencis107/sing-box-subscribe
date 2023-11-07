@@ -347,7 +347,7 @@
       "external_ui_download_url": "",
       "external_ui_download_detour": "",
       "external_ui": "ui",
-      "secret": "qwert!233",
+      "secret": "",
       "default_mode": "rule",
       "store_selected": true,
       "cache_file": "",
